@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<relativePath>../springparent/pom.xml</relativePath>
+       <groupId>com.myproject</groupId>
+       <artifactId>springparent</artifactId>
+       <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>springwebtraining</artifactId>
+  <packaging>war</packaging>
+  <name>springwebtraining Webapp</name>
+  
+  <properties>
+  	<project.spring.version>3.2.8.RELEASE</project.spring.version>
+  	<springtraining.version>0.0.1-SNAPSHOT</springtraining.version>
+  	<servletapi.version>2.5</servletapi.version>
+  	<spring.security.version>3.2.6.RELEASE</spring.security.version>
+	<project.jackson-datatype-hibernate4.version>2.6.5</project.jackson-datatype-hibernate4.version>
+	<project.json-path.version>0.8.1</project.json-path.version>  	
+  </properties>	
+  
+
+  
+  <dependencies>
+    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+	</dependency>
+	<dependency>
+	       <groupId>org.springframework.security</groupId>
+	       <artifactId>spring-security-web</artifactId>
+	       <version>${spring.security.version}</version>
+	       <scope>compile</scope>
+	</dependency>
+	<dependency>
+	        <groupId>org.springframework.security</groupId>
+	        <artifactId>spring-security-config</artifactId>
+	        <version>${spring.security.version}</version>
+	        <scope>compile</scope>
+	</dependency>	  
+	<!-- Spring MVC framework -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+		<version>${project.spring.version}</version>
+	</dependency>
+    
+	<!-- for compile only, your container should have this -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>${servletapi.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<!-- springtraining dao -->    
+	    
+    <dependency>
+    	<groupId>com.myproject</groupId>
+    	<artifactId>springtrainingdao</artifactId>
+    	<version>${springtraining.version}</version>
+    </dependency>
+	<!-- springtraining services -->    
+    <dependency>
+    	<groupId>com.myproject</groupId>
+    	<artifactId>springtrainingservices</artifactId>
+    	<version>${springtraining.version}</version>
+    </dependency>
+	
+	<dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-log4j12</artifactId>
+	  <version>1.5.6</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.fasterxml.jackson.datatype</groupId>
+		<artifactId>jackson-datatype-hibernate4</artifactId>
+		<version>${project.jackson-datatype-hibernate4.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.jayway.jsonpath</groupId>
+		<artifactId>json-path</artifactId>
+		<version>${project.json-path.version}</version>
+	</dependency>
+	
+</dependencies>  
+  <build>
+    <finalName>springwebtraining</finalName>
+  </build>
+</project>

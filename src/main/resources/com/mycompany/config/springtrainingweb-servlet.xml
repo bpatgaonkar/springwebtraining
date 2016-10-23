@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+    <!-- Controller -->
+    <bean id="planController" class="com.mycompany.config.plan.controller.PlanController">
+        <property name="planService" ref="planService"/>
+    </bean>
+	
+    <bean id="activityController" class="com.mycompany.config.plan.controller.ActivityController">
+        <property name="activityService" ref="activityService"/>
+    </bean>
+
+    <bean id="responsiblityController" class="com.mycompany.config.plan.controller.ResponsiblityController">
+        <property name="planService" ref="planService"/>
+    </bean>
+        
+    <!--  Converter -->
+    <bean id="jsonConverter"  class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json</value>
+            </list>
+        </property>
+        <property name="objectMapper">
+            <bean class="com.mycompany.config.plan.controller.HibernateAwareObjectMapper" />
+        </property> 		
+    </bean>            
+    <bean id="xmlConverter"
+              class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+        <constructor-arg ref="jaxbMarshaller" />
+    </bean>
+		
+    <bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>com.mycompany.config.plan.Plan</value>
+                <value>com.mycompany.config.plan.Responsibility</value>
+                <value>com.mycompany.config.plan.ResponsibilityDef</value>
+                <value>com.mycompany.config.plan.ActivityDetail</value>
+                <value>com.mycompany.config.plan.ActivityGroup</value>
+                <value>com.mycompany.config.plan.ActivityType</value>
+                <value>com.mycompany.config.plan.Activity</value>
+            </list>
+        </property>
+    </bean>	
+	
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    
+    <bean
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+                <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+                <ref bean="jsonConverter" />
+                <ref bean="xmlConverter" />
+            </list>
+        </property>
+    </bean>
+      
+</beans>

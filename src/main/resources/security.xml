@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+		   http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+  
+<security:http auto-config='true'>
+     <security:intercept-url pattern="/plan/**" access="ROLE_CLOSINGDISCLOSURE,ROLE_CAIVRS" />
+     <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+     <security:http-basic />
+</security:http>
+
+<!--  
+<security:authentication-manager>
+     <security:authentication-provider>
+         <security:user-service>
+              <security:user name="username1" password="password1" authorities="ROLE_USER" />
+              <security:user name="username2" password="password2" authorities="ROLE_USER, ROLE_ADMIN" />
+              </security:user-service>
+     </security:authentication-provider>
+</security:authentication-manager>
+-->
+
+<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
+    <property name="rolePrefix" value="ACTGOTO_"/>
+</bean>
+  
+<bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+    <property name="decisionVoters">
+        <list>
+            <!--  <bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/> -->
+            <bean class="org.springframework.security.access.vote.RoleVoter">
+                <property name="rolePrefix" value="ACTGOTO_"/>
+            </bean>
+            <!--  <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/> -->
+        </list>
+    </property>
+</bean>
+
+  
+<security:authentication-manager>
+	<security:authentication-provider ref="customDaoAuthenticationProvider"/>
+</security:authentication-manager>
+
+<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder">
+	<constructor-arg index="0" value="SHA-512"/>
+</bean>
+
+<bean id="customDaoAuthenticationProvider" class="com.mycompany.spring.security.authentication.MyDaoAuthenticationProvider">
+		<property name="passwordEncoder" ref="passwordEncoder"/>
+		<property name="userDetailsService" ref="jdbcUserService"/>
+</bean>
+
+<bean id="jdbcUserService" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+	<property name="dataSource" ref="dataSource"/>
+	<property name="usersByUsernameQuery">
+		<value>select userid as username,password_sha as password, 1 as enabled from t_user where userid=?</value>
+	</property>
+	<property name="authoritiesByUsernameQuery">
+		<value>select usr.userid as username ,substr(orp.permissiontypecode,9) as authority from t_orgrolepermission orp, t_orgentity org , t_user usr where usr.userid=? and org.useroid = usr.useroid and orp.orgroleid = org.orgroleid and orp.permissiontypecode like 'ACTGOTO_%'
+		</value>
+	</property>
+	<property name="rolePrefix" value="ROLE_"/>
+</bean>
+</beans>
